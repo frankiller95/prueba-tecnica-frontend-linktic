@@ -12,6 +12,17 @@
     :pagination="initialPagination"
     :rows-per-page-options="[5, 10, 20]"
   >
+    <template #top-right>
+      <q-btn
+        unelevated
+        no-caps
+        color="primary"
+        icon="add"
+        label="Nuevo método de pago"
+        @click="emit('create')"
+      />
+    </template>
+
     <template #loading>
       <q-inner-loading showing color="primary" />
     </template>
@@ -26,6 +37,35 @@
           :aria-label="`Cambiar estado de ${row.name}`"
           @update:model-value="emit('toggleStatus', row.id)"
         />
+      </q-td>
+    </template>
+
+    <template #body-cell-actions="{ row }: { row: PaymentMethod }">
+      <q-td class="text-right">
+        <q-btn
+          flat
+          round
+          dense
+          color="primary"
+          icon="edit"
+          :disable="pendingIds.includes(row.id)"
+          :aria-label="`Editar ${row.name}`"
+          @click="emit('edit', row)"
+        >
+          <q-tooltip>Editar</q-tooltip>
+        </q-btn>
+        <q-btn
+          flat
+          round
+          dense
+          color="negative"
+          icon="delete"
+          :disable="pendingIds.includes(row.id)"
+          :aria-label="`Eliminar ${row.name}`"
+          @click="emit('remove', row)"
+        >
+          <q-tooltip>Eliminar</q-tooltip>
+        </q-btn>
       </q-td>
     </template>
 
@@ -51,6 +91,27 @@
               :aria-label="`Cambiar estado de ${row.name}`"
               @update:model-value="emit('toggleStatus', row.id)"
             />
+            <q-space />
+            <q-btn
+              flat
+              round
+              dense
+              color="primary"
+              icon="edit"
+              :disable="pendingIds.includes(row.id)"
+              :aria-label="`Editar ${row.name}`"
+              @click="emit('edit', row)"
+            />
+            <q-btn
+              flat
+              round
+              dense
+              color="negative"
+              icon="delete"
+              :disable="pendingIds.includes(row.id)"
+              :aria-label="`Eliminar ${row.name}`"
+              @click="emit('remove', row)"
+            />
           </q-card-actions>
         </q-card>
       </div>
@@ -75,7 +136,10 @@ defineProps<{
 }>();
 
 const emit = defineEmits<{
+  create: [];
   toggleStatus: [id: string];
+  edit: [paymentMethod: PaymentMethod];
+  remove: [paymentMethod: PaymentMethod];
 }>();
 
 const initialPagination = { rowsPerPage: 10 };
@@ -98,5 +162,6 @@ const columns: QTableColumn<PaymentMethod>[] = [
     align: 'left',
     sortable: true,
   },
+  { name: 'actions', label: 'Acciones', field: 'id', align: 'right' },
 ];
 </script>
