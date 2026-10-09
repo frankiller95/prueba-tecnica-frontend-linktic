@@ -11,38 +11,20 @@
       </q-card-section>
     </q-card>
 
-    <!-- Listado provisional: se reemplaza por la tabla en el siguiente paso. -->
-    <q-card flat bordered>
-      <q-card-section class="text-subtitle2">
-        {{ paymentMethodsStore.items.length }} métodos de pago encontrados
-      </q-card-section>
-
-      <q-list separator>
-        <q-item v-for="paymentMethod in paymentMethodsStore.items" :key="paymentMethod.id">
-          <q-item-section>
-            <q-item-label>{{ paymentMethod.name }}</q-item-label>
-            <q-item-label caption>
-              {{ PAYMENT_METHOD_TYPE_LABELS[paymentMethod.type] }} ·
-              {{ PAYMENT_METHOD_STATUS_LABELS[paymentMethod.status] }} ·
-              {{ paymentMethod.createdAt.slice(0, 10) }}
-            </q-item-label>
-          </q-item-section>
-        </q-item>
-      </q-list>
-
-      <q-inner-loading :showing="paymentMethodsStore.loading" />
-    </q-card>
+    <PaymentMethodsTable
+      :rows="paymentMethodsStore.items"
+      :loading="paymentMethodsStore.loading"
+      :pending-ids="paymentMethodsStore.pendingIds"
+      @toggle-status="paymentMethodsStore.togglePaymentMethodStatus"
+    />
   </q-page>
 </template>
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import BaseFilters from '@/components/BaseFilters.vue';
-import {
-  PAYMENT_METHOD_FILTER_FIELDS,
-  PAYMENT_METHOD_STATUS_LABELS,
-  PAYMENT_METHOD_TYPE_LABELS,
-} from '@/constants/payment-methods';
+import PaymentMethodsTable from '@/components/PaymentMethodsTable.vue';
+import { PAYMENT_METHOD_FILTER_FIELDS } from '@/constants/payment-methods';
 import { usePaymentMethodsStore } from '@/stores/payment-methods-store';
 import type { FilterValues } from '@/types/filters';
 
