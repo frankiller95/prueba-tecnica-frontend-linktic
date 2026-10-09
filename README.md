@@ -31,8 +31,8 @@ No es necesario instalar Quasar CLI de forma global: los comandos usan la versi√
 **Paso 1.** Clonar el repositorio y entrar a la carpeta del proyecto:
 
 ```bash
-git clone <url-del-repositorio>
-cd prueba-linktic
+git clone https://github.com/frankiller95/prueba-tecnica-frontend-linktic.git
+cd prueba-tecnica-frontend-linktic
 ```
 
 **Paso 2.** Cambiar a la rama de la prueba:
