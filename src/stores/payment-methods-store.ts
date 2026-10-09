@@ -18,6 +18,8 @@ export const usePaymentMethodsStore = defineStore('payment-methods', () => {
   const saving = ref(false);
   /** Ids de los registros con una operación individual en curso (cambio de estado o borrado). */
   const pendingIds = ref<string[]>([]);
+  /** Ids de los registros que se están eliminando, para mostrar su indicador de carga. */
+  const removingIds = ref<string[]>([]);
 
   function isPending(id: string): boolean {
     return pendingIds.value.includes(id);
@@ -107,11 +109,17 @@ export const usePaymentMethodsStore = defineStore('payment-methods', () => {
     return succeeded;
   }
 
-  function removePaymentMethod(id: string): Promise<boolean> {
-    return runPendingOperation(id, async () => {
+  async function removePaymentMethod(id: string): Promise<boolean> {
+    removingIds.value = [...removingIds.value, id];
+
+    const wasRemoved = await runPendingOperation(id, async () => {
       await mockApi.paymentMethods.remove(id);
       items.value = items.value.filter((item) => item.id !== id);
     });
+
+    removingIds.value = removingIds.value.filter((removingId) => removingId !== id);
+
+    return wasRemoved;
   }
 
   return {
@@ -120,6 +128,7 @@ export const usePaymentMethodsStore = defineStore('payment-methods', () => {
     loading,
     saving,
     pendingIds,
+    removingIds,
     isPending,
     fetchPaymentMethods,
     createPaymentMethod,

@@ -60,7 +60,8 @@
           dense
           color="negative"
           icon="delete"
-          :disable="pendingIds.includes(row.id)"
+          :loading="removingIds.includes(row.id)"
+          :disable="isRemoveDisabled(row.id)"
           :aria-label="`Eliminar ${row.name}`"
           @click="emit('remove', row)"
         >
@@ -108,7 +109,8 @@
               dense
               color="negative"
               icon="delete"
-              :disable="pendingIds.includes(row.id)"
+              :loading="removingIds.includes(row.id)"
+              :disable="isRemoveDisabled(row.id)"
               :aria-label="`Eliminar ${row.name}`"
               @click="emit('remove', row)"
             />
@@ -128,11 +130,13 @@ import {
 import type { PaymentMethod } from '@/types/payment-method';
 import { formatDate } from '@/utils/formatters';
 
-defineProps<{
+const props = defineProps<{
   rows: PaymentMethod[];
   loading?: boolean;
   /** Ids de los registros con una operación en curso; sus acciones se deshabilitan. */
   pendingIds: string[];
+  /** Ids de los registros que se están eliminando; su botón de eliminar muestra un spinner. */
+  removingIds: string[];
 }>();
 
 const emit = defineEmits<{
@@ -143,6 +147,11 @@ const emit = defineEmits<{
 }>();
 
 const initialPagination = { rowsPerPage: 10 };
+
+// Mientras se elimina, el botón no se deshabilita para que el spinner se vea con su color normal.
+function isRemoveDisabled(id: string): boolean {
+  return props.pendingIds.includes(id) && !props.removingIds.includes(id);
+}
 
 const columns: QTableColumn<PaymentMethod>[] = [
   { name: 'name', label: 'Nombre', field: 'name', align: 'left', sortable: true },

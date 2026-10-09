@@ -15,6 +15,7 @@
       :rows="paymentMethodsStore.items"
       :loading="paymentMethodsStore.loading"
       :pending-ids="paymentMethodsStore.pendingIds"
+      :removing-ids="paymentMethodsStore.removingIds"
       @create="openForm(null)"
       @edit="openForm"
       @remove="confirmRemoval"
