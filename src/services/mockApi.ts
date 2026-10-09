@@ -118,8 +118,17 @@ function findPaymentMethod(id: string): PaymentMethod {
   return paymentMethod;
 }
 
+/** Devuelve la fecha local (YYYY-MM-DD) de una fecha ISO, la misma que ve el usuario en la tabla. */
+function toLocalDateKey(isoDate: string): string {
+  const date = new Date(isoDate);
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+
 function matchesFilters(paymentMethod: PaymentMethod, filters: PaymentMethodFilters): boolean {
-  const createdDate = paymentMethod.createdAt.slice(0, 10);
+  const createdDate = toLocalDateKey(paymentMethod.createdAt);
   const { name, type, status, createdFrom, createdTo } = filters;
 
   return (
