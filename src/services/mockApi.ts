@@ -1,9 +1,6 @@
 /**
  * Único punto de simulación del backend.
- *
- * Expone el mismo contrato que tendría un cliente HTTP real (promesas que
- * resuelven con datos o rechazan con `ApiError`), de modo que sustituirlo por
- * una API real solo implique reescribir este archivo.
+ * Esta implementación simula un backend con latencia, errores aleatorios y almacenamiento en memoria.
  */
 import type { AuthSession, AuthUser, Credentials } from '@/types/auth';
 import type {
@@ -35,8 +32,14 @@ const MOCK_USER: AuthUser = {
   name: 'Administrador',
   email: 'admin@linktic.com',
 };
-const MOCK_PASSWORD = 'Admin123*';
+const MOCK_PASSWORD = 'Secret123!';
 const MOCK_TOKEN = 'mock-session-token';
+
+/** Credenciales de demostración, expuestas para precargar el formulario de login. */
+export const demoCredentials: Readonly<Credentials> = {
+  email: MOCK_USER.email,
+  password: MOCK_PASSWORD,
+};
 
 let paymentMethods: PaymentMethod[] = [
   {

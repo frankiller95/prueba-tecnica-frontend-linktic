@@ -79,7 +79,8 @@ const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
 
-const credentials = reactive<Credentials>({ email: '', password: '' });
+// El formulario inicia precargado con las credenciales de demostración del mock.
+const credentials = reactive<Credentials>(authStore.getDemoCredentials());
 const isPasswordVisible = ref(false);
 
 const emailRules = [required('Ingresa tu correo electrónico.'), email()];

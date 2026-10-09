@@ -1,6 +1,6 @@
 import { computed, ref } from 'vue';
 import { defineStore, acceptHMRUpdate } from 'pinia';
-import { mockApi } from '@/services/mockApi';
+import { demoCredentials, mockApi } from '@/services/mockApi';
 import { useUiStore } from '@/stores/ui-store';
 import type { AuthSession, Credentials } from '@/types/auth';
 
@@ -38,6 +38,11 @@ export const useAuthStore = defineStore('auth', () => {
     writeStoredSession(newSession);
   }
 
+  /** Devuelve una copia de las credenciales de demostración definidas en el mock. */
+  function getDemoCredentials(): Credentials {
+    return { ...demoCredentials };
+  }
+
   /** Inicia sesión y devuelve `true` si las credenciales fueron aceptadas. */
   async function login(credentials: Credentials): Promise<boolean> {
     loading.value = true;
@@ -67,7 +72,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  return { session, loading, isAuthenticated, user, login, logout };
+  return { session, loading, isAuthenticated, user, getDemoCredentials, login, logout };
 });
 
 if (import.meta.hot) {
